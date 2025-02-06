@@ -1,5 +1,5 @@
 export class Contact {
-    public id: number;
+    public id: string;
     public name: string;
     public email: string;
     public phone: string;
@@ -7,7 +7,7 @@ export class Contact {
     public group: Contact[];
   
     constructor(
-      id: number,
+      id: string,
       name: string,
       email: string,
       phone: string,

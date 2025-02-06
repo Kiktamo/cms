@@ -3,11 +3,11 @@ import { Document } from '../document.model';
 
 @Component({
   selector: 'cms-document-detail',
-  imports: [],
+  standalone: false,
   templateUrl: './document-detail.component.html',
   styleUrl: './document-detail.component.css'
 })
 export class DocumentDetailComponent {
   @Input() document!: Document
-
+  
 }

@@ -3,7 +3,7 @@ import { Contact } from '../contact.model';
 
 @Component({
   selector: 'cms-contact-detail',
-  imports: [],
+  standalone: false,
   templateUrl: './contact-detail.component.html',
   styleUrl: './contact-detail.component.css'
 })

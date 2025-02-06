@@ -8,7 +8,7 @@ describe('DocumentItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DocumentItemComponent]
+      declarations: [DocumentItemComponent]
     })
     .compileComponents();
 

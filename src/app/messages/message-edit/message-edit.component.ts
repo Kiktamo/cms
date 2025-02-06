@@ -1,11 +1,10 @@
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Message } from '../message.model';
-import { CommonModule } from '@angular/common';
 import { FormsModule }   from '@angular/forms';
 
 @Component({
   selector: 'cms-message-edit',
-  imports: [CommonModule, FormsModule],
+  standalone: false,
   templateUrl: './message-edit.component.html',
   styleUrl: './message-edit.component.css'
 })
@@ -22,7 +21,7 @@ export class MessageEditComponent {
     const currentMsgText = this.msgText!.nativeElement.value;
 
     const newMessage = new Message(
-      0,
+      '0',
       currentMsgSubject,
       currentMsgText,
       this.currentSender
@@ -37,5 +36,4 @@ export class MessageEditComponent {
     this.msgText!.nativeElement.value = "";
 
   }
-
 }

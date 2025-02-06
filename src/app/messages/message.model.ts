@@ -1,11 +1,11 @@
 export class Message {
-    public id: number;
+    public id: string;
     public subject: string;
     public msgText: string;
     public sender: string;
   
     constructor(
-      id: number,
+      id: string,
       subject: string,
       msgText: string,
       sender: string

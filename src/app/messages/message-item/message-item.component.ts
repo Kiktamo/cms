@@ -3,7 +3,7 @@ import { Message } from '../message.model';
 
 @Component({
   selector: 'cms-message-item',
-  imports: [],
+  standalone: false,
   templateUrl: './message-item.component.html',
   styleUrl: './message-item.component.css'
 })

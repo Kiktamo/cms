@@ -8,7 +8,7 @@ describe('MessageEditComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MessageEditComponent]
+      declarations: [MessageEditComponent]
     })
     .compileComponents();
 
