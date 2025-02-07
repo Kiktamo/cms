@@ -14,7 +14,7 @@ export class DocumentService {
   }
 
      getDocuments(): Document[] {
-      return this.documents.slice(0, this.documents.length);
+      return this.documents.slice();
      }
   
      getDocument(id: string): Document | null {

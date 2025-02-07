@@ -14,7 +14,7 @@ export class ContactService {
    }
 
    getContacts(): Contact[] {
-    return this.contacts.slice(0, this.contacts.length)
+    return this.contacts.slice()
    }
 
    getContact(id: string): Contact | null {

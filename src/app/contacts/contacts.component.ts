@@ -6,8 +6,7 @@ import { ContactService } from './contact.service';
   selector: 'cms-contacts',
   standalone: false,
   templateUrl: './contacts.component.html',
-  styleUrl: './contacts.component.css',
-  providers: [ContactService]
+  styleUrl: './contacts.component.css'
 })
 export class ContactsComponent implements OnInit {
   selectedContact?: Contact
