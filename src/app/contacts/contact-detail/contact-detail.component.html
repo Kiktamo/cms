@@ -11,8 +11,8 @@
                              style="max-height: 100px;">
                     </div>
                     <div class="pull-right" style="padding-top: 10%;">
-                        <a class="btn btn-primary" style="margin-right: 10px;">Edit</a>
-                        <a class="btn btn-danger">Delete</a>
+                        <a class="btn btn-primary" style="margin-right: 10px;" [routerLink]="['edit']">Edit</a>
+                        <a class="btn btn-danger" (click)="onDelete()">Delete</a>
                     </div>
                 </div>
             </div>

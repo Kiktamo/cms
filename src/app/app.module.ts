@@ -18,6 +18,8 @@ import { MessageItemComponent } from './messages/message-item/message-item.compo
 import { MessageEditComponent } from './messages/message-edit/message-edit.component';
 import { ContactService } from './contacts/contact.service';
 import { MessageService } from './messages/message.service';
+import { DocumentEditComponent } from './documents/document-edit/document-edit.component';
+import { ContactEditComponent } from './contacts/contact-edit/contact-edit.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { MessageService } from './messages/message.service';
     DocumentListComponent,
     MessageListComponent,
     MessageItemComponent,
-    MessageEditComponent
+    MessageEditComponent,
+    DocumentEditComponent,
+    ContactEditComponent
   ],
   imports: [
     BrowserModule,
