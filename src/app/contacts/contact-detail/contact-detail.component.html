@@ -5,7 +5,9 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h2>{{ contact.name }}</h2>
-                        <img [src]="contact.imageUrl" 
+                        <img 
+                            *ngIf="contact.imageUrl != ' ' || null"
+                            [src]="contact.imageUrl" 
                              alt="{{ contact.name }}"
                              class="img-responsive pull-left"
                              style="max-height: 100px;">

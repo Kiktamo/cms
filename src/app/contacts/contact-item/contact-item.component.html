@@ -1,4 +1,6 @@
 <a
+cdkDrag
+[cdkDragData]="contact"
 routerLinkActive="active"
 class="list-group-item clearfix"
 [routerLink]="[contact.id]">
@@ -6,7 +8,7 @@ class="list-group-item clearfix"
     <h4 class="list-group-item-heading">{{ contact?.name }}</h4>
 </div>
 <span class="pull-right">
-    <img
+    <img *ngIf="contact.imageUrl != ' ' || null"
         [src]="contact?.imageUrl"
         alt="{{ contact?.name }}"
         class="img-responsive"
