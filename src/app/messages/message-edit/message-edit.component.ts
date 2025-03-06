@@ -23,10 +23,9 @@ export class MessageEditComponent {
     event.preventDefault();
     const currentMsgSubject = this.subject!.nativeElement.value;
     const currentMsgText = this.msgText!.nativeElement.value;
-    const nextId = this.messageService.nextId();
 
     const newMessage = new Message(
-      nextId,
+      '0',
       currentMsgSubject,
       currentMsgText,
       this.currentSender
