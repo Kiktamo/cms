@@ -1,6 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Contact } from './contact.model';
-import { MOCKCONTACTS } from './MOCKCONTACTS';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -14,38 +13,27 @@ export class ContactService {
   contactListChangedEvent = new Subject<Contact[]>();
 
   constructor(private http: HttpClient) {
-    this.contacts = MOCKCONTACTS
+    this.getContacts();
   }
 
   getContacts() {
-        this.http.get("https://matt-cms-1fb03-default-rtdb.firebaseio.com/contacts.json").subscribe(
-           // success method
-           (contacts: Contact[] ) => {
-              this.contacts = contacts;
-              this.maxContactId = this.getMaxId();
-              this.contacts.sort();
-              this.contactListChangedEvent.next(this.contacts.slice());
-           },
-           // error method
-           (error: any) => {
-              console.log(error);
-           })
+    this.http.get("http://localhost:8080/contacts").subscribe(
+      // success method
+      (contacts: Contact[]) => {
+        this.contacts = contacts;
+        this.maxContactId = this.getMaxId();
+        this.contacts.sort();
+        this.contactListChangedEvent.next(this.contacts.slice());
+      },
+      // error method
+      (error: any) => {
+        console.log(error);
+      })
   }
 
-  storeContacts() {
-    const contactsString = JSON.stringify(this.contacts)
-    const putHeaders = new HttpHeaders().set("Content-Type", "application/json")
-
-    this.http.put("https://matt-cms-1fb03-default-rtdb.firebaseio.com/contacts.json", contactsString, {headers:putHeaders}).subscribe(
-             // success method
-             () => {
-              this.contactListChangedEvent.next(this.contacts.slice());
-           },
-           // error method
-           (error: any) => {
-              console.log(error);
-           }
-          )
+  sortAndSend() {
+    this.contacts.sort();
+    this.contactListChangedEvent.next(this.contacts.slice());
   }
 
   getContact(id: string): Contact | null {
@@ -56,35 +44,60 @@ export class ContactService {
     if (!newContact) {
       return;
     }
-    this.maxContactId++;
-    newContact.id = this.maxContactId.toString();
-    this.contacts.push(newContact);
-    this.storeContacts();
+    newContact.id = '';
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.post<{ message: string, contact: Contact }>('http://localhost:8080/contacts',
+      newContact,
+      { headers: headers })
+      .subscribe(
+        (responseData) => {
+          // add new contact to contacts
+          this.contacts.push(responseData.contact);
+          this.sortAndSend();
+        }
+      );
   }
 
   updateContact(originalContact: Contact, newContact: Contact) {
     if (!originalContact || !newContact) {
       return;
     }
-    const pos = this.contacts.indexOf(originalContact);
+    const pos = this.contacts.findIndex(c => c.id === originalContact.id);
     if (pos < 0) {
       return;
     }
     newContact.id = originalContact.id;
-    this.contacts[pos] = newContact;
-    this.storeContacts();
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    // update database
+    this.http.put('http://localhost:8080/contacts/' + originalContact.id,
+      newContact, { headers: headers })
+      .subscribe(
+        (response: Response) => {
+          this.contacts[pos] = newContact;
+          this.sortAndSend();
+        });
   }
 
   deleteContact(contact: Contact) {
     if (!contact) {
       return;
     }
-    const pos = this.contacts.indexOf(contact);
+    const pos = this.contacts.findIndex(c => c.id === contact.id);
     if (pos < 0) {
       return;
     }
-    this.contacts.splice(pos, 1);
-    this.storeContacts();
+    // delete from database
+    this.http.delete('http://localhost:8080/contacts/' + contact.id)
+      .subscribe(
+        (response: Response) => {
+          this.contacts.splice(pos, 1);
+          this.sortAndSend();
+        }
+      );
   }
 
   getMaxId(): number {
@@ -98,5 +111,4 @@ export class ContactService {
     }
     return maxId;
   }
-
 }

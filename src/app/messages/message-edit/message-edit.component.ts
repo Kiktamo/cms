@@ -2,6 +2,8 @@ import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular
 import { Message } from '../message.model';
 import { FormsModule }   from '@angular/forms';
 import { MessageService } from '../message.service';
+import { Contact } from '../../contacts/contact.model';
+import { ContactService } from '../../contacts/contact.service';
 
 @Component({
   selector: 'cms-message-edit',
@@ -10,13 +12,15 @@ import { MessageService } from '../message.service';
   styleUrl: './message-edit.component.css'
 })
 export class MessageEditComponent {
-  currentSender: string = "1"
+  currentSender: string = "101"
 
   @ViewChild('subject', {static:false}) subject!: ElementRef;
   @ViewChild('msgText', {static:false}) msgText!: ElementRef;
   @Output() addMessageEvent = new EventEmitter<Message>();
 
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService) {
+
+  }
 
 
   onSendMessage(event: Event) {
@@ -27,9 +31,10 @@ export class MessageEditComponent {
     const newMessage = new Message(
       '0',
       currentMsgSubject,
-      currentMsgText,
-      this.currentSender
+      currentMsgText
     )
+
+    newMessage.sender = this.currentSender;
 
     this.messageService.addMessage(newMessage);
     this.onClear();

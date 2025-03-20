@@ -1,6 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Document } from './document.model';
-import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -14,39 +13,27 @@ export class DocumentService {
   documentSelectedEvent = new EventEmitter<Document>();
 
   constructor(private http: HttpClient) {
-    this.documents = MOCKDOCUMENTS;
-    this.maxDocumentId = this.getMaxId();
+    this.getDocuments();
   }
 
   getDocuments() {
-    this.http.get("https://matt-cms-1fb03-default-rtdb.firebaseio.com/documents.json").subscribe(
-       // success method
-       (documents: Document[] ) => {
-          this.documents = documents;
-          this.maxDocumentId = this.getMaxId();
-          this.documents.sort();
-          this.documentListChangedEvent.next(this.documents.slice());
-       },
-       // error method
-       (error: any) => {
-          console.log(error);
-       })
+    this.http.get("http://localhost:8080/documents").subscribe(
+      // success method
+      (documents: Document[]) => {
+        this.documents = documents;
+        this.maxDocumentId = this.getMaxId();
+        this.documents.sort();
+        this.documentListChangedEvent.next(this.documents.slice());
+      },
+      // error method
+      (error: any) => {
+        console.log(error);
+      })
   }
 
-  storeDocuments() {
-    const documentsString = JSON.stringify(this.documents)
-    const putHeaders = new HttpHeaders().set("Content-Type", "application/json")
-
-    this.http.put("https://matt-cms-1fb03-default-rtdb.firebaseio.com/documents.json", documentsString, {headers:putHeaders}).subscribe(
-             // success method
-             () => {
-              this.documentListChangedEvent.next(this.documents.slice());
-           },
-           // error method
-           (error: any) => {
-              console.log(error);
-           }
-          )
+  sortAndSend(){
+    this.documents.sort()
+    this.documentListChangedEvent.next(this.documents.slice());
   }
 
   getDocument(id: string): Document | null {
@@ -57,35 +44,60 @@ export class DocumentService {
     if (!newDocument) {
       return;
     }
-    this.maxDocumentId++;
-    newDocument.id = this.maxDocumentId.toString();
-    this.documents.push(newDocument);
-    this.storeDocuments();
+    newDocument.id = '';
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.post<{ message: string, document: Document }>('http://localhost:8080/documents',
+      newDocument,
+      { headers: headers })
+      .subscribe(
+        (responseData) => {
+          // add new document to documents
+          this.documents.push(responseData.document);
+          this.sortAndSend();
+        }
+      );
   }
 
   updateDocument(originalDocument: Document, newDocument: Document) {
     if (!originalDocument || !newDocument) {
       return;
     }
-    const pos = this.documents.indexOf(originalDocument);
+    const pos = this.documents.findIndex(d => d.id === originalDocument.id);
     if (pos < 0) {
       return;
     }
     newDocument.id = originalDocument.id;
-    this.documents[pos] = newDocument;
-    this.storeDocuments();
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    // update database
+    this.http.put('http://localhost:8080/documents/' + originalDocument.id,
+      newDocument, { headers: headers })
+      .subscribe(
+        (response: Response) => {
+          this.documents[pos] = newDocument;
+          this.sortAndSend();
+        });
   }
 
   deleteDocument(document: Document) {
     if (!document) {
       return;
     }
-    const pos = this.documents.indexOf(document);
+    const pos = this.documents.findIndex(d => d.id === document.id)
     if (pos < 0) {
       return;
     }
-    this.documents.splice(pos, 1);
-    this.storeDocuments();
+    // delete from database
+    this.http.delete('http://localhost:8080/documents/' + document.id)
+      .subscribe(
+        (response: Response) => {
+          this.documents.splice(pos, 1);
+          this.sortAndSend();
+        }
+      );
   }
 
   getMaxId(): number {
