@@ -5,7 +5,7 @@ module.exports = router;
 const sequenceGenerator = require('./sequenceGenerator');
 const Contact = require('../models/contact');
 
-router.get('/', async (req, res, next) => {
+router.get('/api', async (req, res, next) => {
   try {
     const contacts = await Contact.find().populate('group');
     res.status(200).json(contacts);

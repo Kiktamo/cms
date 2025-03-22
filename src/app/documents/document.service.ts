@@ -17,7 +17,7 @@ export class DocumentService {
   }
 
   getDocuments() {
-    this.http.get("http://localhost:8080/documents").subscribe(
+    this.http.get("http://localhost:8080/documents/api").subscribe(
       // success method
       (documents: Document[]) => {
         this.documents = documents;

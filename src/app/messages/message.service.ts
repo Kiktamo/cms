@@ -17,7 +17,7 @@ export class MessageService {
   }
 
   getMessages() {
-    this.http.get("http://localhost:8080/messages").subscribe(
+    this.http.get("http://localhost:8080/messages/api").subscribe(
       // success method
       (messages: Message[]) => {
         this.messages = messages;

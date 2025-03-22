@@ -17,7 +17,7 @@ export class ContactService {
   }
 
   getContacts() {
-    this.http.get("http://localhost:8080/contacts").subscribe(
+    this.http.get("http://localhost:8080/contacts/api").subscribe(
       // success method
       (contacts: Contact[]) => {
         this.contacts = contacts;

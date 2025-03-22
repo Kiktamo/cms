@@ -5,7 +5,7 @@ module.exports = router;
 const sequenceGenerator = require('./sequenceGenerator');
 const Message = require('../models/message');
 
-router.get('/', async (req, res, next) => {
+router.get('/api', async (req, res, next) => {
   try {
     const messages = await Message.find();
     res.status(200).json(messages);

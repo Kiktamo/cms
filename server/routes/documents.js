@@ -7,7 +7,7 @@ const Document = require('../models/document');
 const message = require('../models/message');
 
 
-router.get('/', async (req, res, next) => {
+router.get('/api', async (req, res, next) => {
     try {
       const documents = await Document.find();
       res.status(200).json(documents);
